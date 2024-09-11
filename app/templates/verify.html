@@ -1,25 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Verify OTP</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css')}}">
 </head>
 <body>
-    <div class="container">
-        <h1 class="mt-5">Login</h1>
-        <form method="POST" action="{{ url_for('main.verify', email=email) }}">
-            <div class="form-group">
-                <label for="email">Otp</label>
-                <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter otp" required>
-            </div>
-            <button type="submit" class="btn btn-primary">verify</button>
-        </form>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <h1>Verify OTP</h1>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=32) }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.otp.label }}<br>
+            {{ form.otp(size=6) }}<br>
+            {% for error in form.otp.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+        <p style="color: blue;">
+            {% if messages %}
+                {{ messages }}
+            {% endif %}
+        </p>
+    </form>
 </body>
 </html>
