@@ -1,34 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css')}}">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Login</h1>
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email(size=32) }}<br>
-            {% for error in form.email.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}<br>
-            {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-        <p>Don't Have a Account? <a href="{{url_for('main.register_switch')}}">Register</a></p>
-        <p style="color: blue;">
-            {% if messages %}
-                {{ messages }}
-            {% endif %}
-        </p>
-    </form>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="w-full max-w-md p-8 bg-white shadow-md rounded-lg">
+        <h1 class="text-2xl font-bold mb-6 text-center text-gray-700">Login</h1>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-4">
+                {{ form.email.label(class="block text-sm font-medium text-gray-600") }}
+                {{ form.email(class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm") }}
+                {% for error in form.email.errors %}
+                <span class="text-red-600 text-sm">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+
+            <div class="mb-4">
+                {{ form.password.label(class="block text-sm font-medium text-gray-600") }}
+                {{ form.password(class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm") }}
+                {% for error in form.password.errors %}
+                <span class="text-red-600 text-sm">[{{ error }}]</span>
+                {% endfor %}
+            </div>
+
+            <div class="mb-6">
+                {{ form.submit(class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500") }}
+            </div>
+
+            <p class="text-center text-sm">
+                Don't have an account? <a href="{{ url_for('main.register_switch') }}" class="text-indigo-600 hover:text-indigo-500">Register</a>
+            </p>
+
+            <p class="text-center text-blue-600 mt-4">
+                {% if messages %}
+                    {{ messages }}
+                {% endif %}
+            </p>
+        </form>
+    </div>
 </body>
 </html>
