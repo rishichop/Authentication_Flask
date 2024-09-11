@@ -1,0 +1,12 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Mail
+Flask-WTF
+Werkzeug
+Flask-Bcrypt
+Flask-Login
+psycopg2
+itsdangerous
+python-dotenv
+WTForms
