@@ -9,6 +9,7 @@ import time
 from datetime import datetime, timedelta
 from .models.user import Users
 from .views.forms import LoginForm, OTPForm, RegisterForm
+from .sms_service import send_sms
 
 main_routes = Blueprint('main', __name__)
 
@@ -27,7 +28,7 @@ def welcome():
 @main_routes.route("/home")
 @login_required
 def home():
-    return render_template("home.html")
+    return render_template("home.html", email=session["email"])
 
 @main_routes.route("/login", methods=['GET','POST'])
 def login():
@@ -51,6 +52,14 @@ def login():
             if user.verified:
                 session["Login message"] = None
                 login_user(user)
+
+                phone = user.phone
+
+                send_sms(message="Successfull Login. If you did not login, contact support.",
+                         recipient_num=phone)
+                
+                session["email"] = user.email
+
                 return redirect(url_for('main.home'))
             else:
                 session["Login message"] = 'Please verify your email first.'
@@ -77,8 +86,16 @@ def send_otp_email(email, otp):
 def unregister(email):
     user = Users.query.filter_by(email=email).first()
     if user:
+
+        phone = user.phone
         db.session.delete(user)
         db.session.commit()
+        
+        send_sms(message="Sad to see you go. Your account has been deleted.",
+                 recipient_num=phone)
+        
+        session["email"] = None
+        
         session["Login message"] = "Account Deleted"
     return redirect(url_for("main.login"))
 
@@ -90,6 +107,7 @@ def register():
     if form.validate_on_submit(): 
         email = form.email.data
         password = form.password.data
+        phone = form.phone.data
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
         if Users.query.filter_by(email=email).first():
@@ -99,7 +117,7 @@ def register():
         otp, create_time = get_otp()
         send_otp_email(email, otp)
 
-        user = Users(email=email, password=hashed_password, otp=otp, create_time=create_time)
+        user = Users(email=email, password=hashed_password, phone=phone, otp=otp, create_time=create_time)
         db.session.add(user)
         db.session.commit()
 
@@ -130,7 +148,12 @@ def verify(email):
 
         if new_otp == user.otp:
             user.verified = True
+            phone = user.phone
             db.session.commit()
+
+            send_sms(message="Your account have been successfully verified with our service!!",
+                     recipient_num=phone)
+            
             session["Login message"] = "Verification Successful"
             session["Verification message"] = None
             return redirect(url_for("main.login"))
@@ -143,6 +166,7 @@ def verify(email):
 def logout():
     logout_user()
     session["Login message"] = None
+    session["email"] = None
     return redirect(url_for("main.login"))
 
 @main_routes.route("/register_switch")

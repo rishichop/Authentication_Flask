@@ -4,12 +4,16 @@ from twilio.rest import Client
 
 load_dotenv()
 
-client = Client(os.getenv('ACC_SID'), os.getenv('AUTH_TOKEN'))
 
-message = client.messages.create(
-  from_=os.getenv('TWILIO_NUM'),
-  body='Hi From Twilio!!',
-  to='+917666275103'
-)
+def send_sms(message, recipient_num):
+    client = Client(os.getenv('ACC_SID'), os.getenv('AUTH_TOKEN'))
 
-print(message.sid)
+    try:
+        message = client.messages.create(
+        from_=os.getenv('TWILIO_NUM'),
+        body=message,
+        to=recipient_num
+        )
+    except:
+        pass
+

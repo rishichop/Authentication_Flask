@@ -5,6 +5,7 @@ class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
+    phone = db.Column(db.String(15), nullable=False)
     verified = db.Column(db.Boolean, default=False)
     otp = db.Column(db.String(6), nullable=False)
     create_time = db.Column(db.DateTime, nullable=False)

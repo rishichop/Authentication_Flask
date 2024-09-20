@@ -3,5 +3,7 @@
 .DS_Store
 env_var.sh
 __pycache__
+app/__pycache__
+app/*/__pycache__
 env
 instance/site.db
